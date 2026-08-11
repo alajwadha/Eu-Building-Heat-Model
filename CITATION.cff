@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+title: EU Building Heat Model
+message: If you use this model, please cite it and the associated article.
+type: software
+authors:
+  - family-names: Alsulaiman
+    given-names: Abdurahman
+    affiliation: Oxford Institute for Energy Studies, Oxford, UK
+  - family-names: Alajwad
+    given-names: Ali
+    affiliation: RENEW Lab, Johns Hopkins University, Baltimore, MD, USA
+license: MIT
+repository-code: https://github.com/alajwadha/EU-Building-Heat-Model
+abstract: >-
+  A NUTS3-resolution techno-economic model of residential heat across the EU-27,
+  the United Kingdom and Switzerland to 2050. It screens hydrogen against
+  heat-pump electrification on annual levelised cost, on cold-snap dispatch in
+  buildings, district heat and power, and on whether a peaker that wins the
+  dispatch can recover its capital.
+keywords:
+  - building heat decarbonisation
+  - hydrogen
+  - heat pumps
+  - capacity adequacy
+  - techno-economic assessment
