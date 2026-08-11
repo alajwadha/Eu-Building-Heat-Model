@@ -53,6 +53,7 @@ def run_pipeline(
     sensitivity: bool = False,
     n_samples: int = 200,
     demand: str = "hotmaps",
+    dashboard: bool = False,
 ) -> None:
 
     import src.Config as cfg
@@ -81,7 +82,7 @@ def run_pipeline(
         import subprocess as _sp, sys as _sys
         print("\nStep 2a: Seasonal heat-load profile (prerequisite for every H2 LCOH)")
         _sp.run([_sys.executable, "-m", "scripts.heat_load_profile"],
-                cwd=str(Path(__file__).resolve().parent / "code"), check=False,
+                cwd=str(Path(__file__).resolve().parent / "code"), check=True,
                 env={**os.environ, "PYTHONPATH": str(Path(__file__).resolve().parent / "code")})
         step(2, f"Build NUTS3 building stock (demand={demand})")
         from src.BuildingStock import (
@@ -143,16 +144,18 @@ def run_pipeline(
     if _fig_scenarios:
         make_all_figures(_fig_scenarios)
 
-    # ── Step 5: Regenerate dashboard data ─────────────────────────────────
-    step(5, "Regenerate dashboard data.js")
-    try:
+    # ── Step 5: Regenerate dashboard data (opt-in) ────────────────────────
+    # The dashboard feeds the project web page and is not needed to reproduce any
+    # number in the paper, so it is off by default. It used to run unconditionally
+    # and swallow its own failure, which is how a run that had already failed still
+    # printed PIPELINE COMPLETE.
+    if dashboard:
+        step(5, "Regenerate dashboard data.js")
         subprocess.run(
             [sys.executable,
              str(CODE_DIR / "scripts" / "generate_dashboard_data.py")],
             check=True,
         )
-    except Exception as e:
-        print(f"  [warn] Dashboard data generation failed: {e}")
 
     print("\n" + "="*60)
     print("  PIPELINE COMPLETE")
@@ -166,6 +169,8 @@ def run_pipeline(
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="EU Hydrogen Buildings model pipeline")
+    parser.add_argument("--dashboard", action="store_true",
+        help="Also regenerate the project dashboard data (not needed for the paper)")
     parser.add_argument("--scenario", default="ALL",
         help="CURRENT_POLICIES | STATED_POLICIES | NET_ZERO | H2_PUSH | COST_OPT | "
              "ALL | ALL+COST_OPT (default: ALL). COST_OPT runs the least-cost LP.")
@@ -207,6 +212,7 @@ def main() -> None:
         sensitivity=args.sensitivity,
         n_samples=args.samples,
         demand=args.demand,
+        dashboard=args.dashboard,
     )
 
 

@@ -2,3 +2,10 @@ __pycache__/
 *.pyc
 results/
 .DS_Store
+
+# Pipeline outputs. The release ships source, data and the pipeline; figures,
+# tables and result CSVs are what a clean clone produces, not what it carries.
+code/results/*.csv
+!code/results/benchmark_multi.csv
+paper/figs/
+paper/tables/
