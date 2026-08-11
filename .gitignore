@@ -1,11 +1,13 @@
 __pycache__/
 *.pyc
-results/
+# Not a bare results/ rule. Git cannot re-include a file whose parent directory is
+# excluded, so that rule silently dropped benchmark_multi.csv from the release even
+# though the pipeline needs it, and a clean clone died on the seasonal heat-load step.
+code/results/*
+!code/results/benchmark_multi.csv
 .DS_Store
 
 # Pipeline outputs. The release ships source, data and the pipeline; figures,
 # tables and result CSVs are what a clean clone produces, not what it carries.
-code/results/*.csv
-!code/results/benchmark_multi.csv
 paper/figs/
 paper/tables/
